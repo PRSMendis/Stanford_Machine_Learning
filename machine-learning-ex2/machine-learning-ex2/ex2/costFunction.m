@@ -31,12 +31,20 @@ grad = zeros(size(theta));
 
 % h = X * theta ; 
 h = sigmoid(X * theta) ; 
-J = 1/m * (-(y')*log(h)) - ((1-y)'*log(1-h));
+% J = 1/m * (-(y')*log(h)) - ((1-y)'*log(1-h));
+% J = 1/m * sum(-y.*log(h) - ((1-y).*log(1-h)));
+J = (1 / m) * (log(h)' * -y - log(1 - h)' * (1 - y));
 
 %gradient descent
-alpha = 0.01;
-theta = ((alpha/ m) * (sigmoid(h) - y));
+% alpha = 0.01;
+% theta = ((alpha/ m) * (sigmoid(h) - y));
+grad = (X' * (h-y))/m;
 
+
+% htheta = sigmoid(X * theta);
+% J = 1/m * sum(-y .* log(htheta) - (1 - y) .* log(1 - htheta));
+% % calculate grads
+% grad = (X'*(htheta - y))/m;
 
 
 
