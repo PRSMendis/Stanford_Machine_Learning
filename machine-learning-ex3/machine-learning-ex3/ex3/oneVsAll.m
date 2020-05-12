@@ -8,8 +8,8 @@ function [all_theta] = oneVsAll(X, y, num_labels, lambda)
 %   to the classifier for label i
 
 % Some useful variables
-m = size(X, 1);
-n = size(X, 2);
+m = size(X, 1); % 5000 examples
+n = size(X, 2); % 400 features
 
 % You need to return the following variables correctly 
 all_theta = zeros(num_labels, n + 1);
@@ -48,6 +48,28 @@ X = [ones(m, 1) X];
 %         fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), ...
 %                 initial_theta, options);
 %
+%classificiers = all_theta
+
+
+for c = 1:num_labels
+%     y == c
+    initial_theta = zeros(n + 1, 1);
+    options = optimset('GradObj', 'on', 'MaxIter', 50);
+    fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), initial_theta, options);
+    all_theta(c,:) = fmincg (@(t)(lrCostFunction(t, X, (y == c), lambda)), initial_theta, options);
+
+    
+end
+
+
+% C = sigmoid(X*theta);
+% for i = 1:m
+%     if C(i) >= 0.5
+%         p(i) = 1;
+%     else
+%         p(i) = 0;
+%     end
+% end
 
 
 
