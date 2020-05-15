@@ -38,6 +38,68 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
+% j = 1/m;
+% j = j * (-y) * log(h)
+
+
+%Cost of non-neural network
+%h = sigmoid(X * theta) ; 
+%J = ((1 / m) * (log(h)' * -y - log(1 - h)' * (1 - y))) + ((lambda/(2*m)) * sum(theta(2:length(theta)).^2 ));
+% Prediction of neural network
+% X = [ones(m, 1) X];
+% C = sigmoid(X * Theta1');
+% n = size(C,1);
+% C = [ones(n, 1) C];
+% D = sigmoid(C * Theta2');
+% [val,p] = max(D,[],2);
+
+
+%use indexing of the identity matrix to essentially get all different
+%classificaitons, in this case - 10
+
+% eye_m = eye(num_labels);
+% y = eye_m
+
+I = eye(num_labels);
+Y = zeros(m, num_labels);
+for i=1:m
+  Y(i, :)= I(y(i), :);
+end
+
+
+
+
+
+%First compute the outputs of the 1st layer
+X = [ones(m, 1) X];
+h1 = sigmoid(X * Theta1');
+h1 = [ones(m,1) h1];
+%Compute output of the 2nd layer
+h2 = sigmoid(h1 * Theta2');
+h = h2;
+%Find the cost 
+
+%Consider that the cost is based on the 10 different classifiers?? I think
+% J = ((1 / m) * (log(h2)' * -y - log(1 - h2)' * (1 - y))) + ((lambda/(2*m)) * sum(Theta2(2:length(Theta2)).^2 ));
+% J = ((1 / m) * (log(h2)' * -y - log(1 - h2)' * (1 - y))) + ((lambda/(2*m)) * sum(Theta2(2:length(Theta2)).^2 ));
+
+% J = sum(J);
+
+% for j = 1:length(num_labels)
+%     J = J + ((1 / m) * (log(h2)' * -Y(:,j) - log(1 - h2)' * (1 - Y(:,j)))) + ((lambda/(2*m)) * sum(Theta2(2:length(Theta2)).^2 ));
+% end
+
+p = sum(sum(Theta1(:, 2:end).^2, 2))+sum(sum(Theta2(:, 2:end).^2, 2));
+
+% J = (-Y).*log(h2) - (1-Y).*log(1-h2) ;
+
+% J = sum(sum((-Y).*log(h) - (1-Y).*log(1-h), 2))/m + lambda*p/(2*m);
+J = sum(sum((-Y).*log(h) - (1-Y).*log(1-h), 2))/m + lambda*p/(2*m);
+
+% c1 = eye_m(:,1);
+% c2 = eye_M(:,2);%...
+
+
 %
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
