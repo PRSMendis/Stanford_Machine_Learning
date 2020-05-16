@@ -170,8 +170,7 @@ for t = 1:m
 %     . Note that you should skip or remove delta_0^(2) . In MATLAB, removing  corresponds to delta_2 = delta_2(2:end).
 
 % DELTA = DELTA + (d_3 * a_2');
-% DELTA = DELTA + sum(sum((d_3 * a_2')));
-DELTA = DELTA + sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1));
+DELTA = DELTA + sum(sum((d_3 * a_2')))
     
     
     
