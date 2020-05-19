@@ -130,6 +130,7 @@ J = sum(sum((-Y).*log(h) - (1-Y).*log(1-h), 2))/m + lambda*p/(2*m);
 Yd = Y';
 
 %Set accumulator to calculate the overall cost
+DELTA = 0;
 for t = 1:m 
     
 %     Step 1
@@ -171,7 +172,9 @@ for t = 1:m
 
 % DELTA = DELTA + (d_3 * a_2');
 % DELTA = DELTA + sum(sum((d_3 * a_2')));
-DELTA = DELTA + sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1));
+% DELTA = DELTA + sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1));
+DELTA = DELTA + sum(sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1)));
+% DELTA = sum(DELTA);
     
     
     
@@ -179,9 +182,17 @@ DELTA = DELTA + sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1));
     
 end
 
+% Step 5
+
+
+% Obtain the (unregularized) gradient for the neural network cost function
+% by dividing the accumulated gradients by  1/m
 
 
 
+D_ij = 1/m * DELTA;
+Theta1_grad = 1/m * (DELTA + lambda * Theta1) ;
+Theta2_grad = 1/m * (DELTA + lambda * Theta2) ;
 
 
 
