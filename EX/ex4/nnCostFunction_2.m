@@ -71,29 +71,13 @@ end
 
 
 %First compute the outputs of the 1st layer
-% X = [ones(m, 1) X];
-% z2 = X * Theta1';
-% h1 = sigmoid(X * Theta1');
-% 
-% h1 = [ones(m,1) h1];
-% %Compute output of the 2nd layer
-% h2 = sigmoid(h1 * Theta2');
-% h = h2;
-% a3 = h2;
-% %Find the cost 
-
-
-a1 = [ones(m, 1) X];
-z2 = a1*Theta1';
-a2 = [ones(size(z2, 1), 1) sigmoid(z2)];
-z3 = a2*Theta2';
-a3 = sigmoid(z3);
-h = a3;
-
-
-
-
-
+X = [ones(m, 1) X];
+h1 = sigmoid(X * Theta1');
+h1 = [ones(m,1) h1];
+%Compute output of the 2nd layer
+h2 = sigmoid(h1 * Theta2');
+h = h2;
+%Find the cost 
 
 %Consider that the cost is based on the 10 different classifiers?? I think
 % J = ((1 / m) * (log(h2)' * -y - log(1 - h2)' * (1 - y))) + ((lambda/(2*m)) * sum(Theta2(2:length(Theta2)).^2 ));
@@ -143,75 +127,20 @@ J = sum(sum((-Y).*log(h) - (1-Y).*log(1-h), 2))/m + lambda*p/(2*m);
 % temp = theta;
 % temp(1) = 0;
 % grad = grad + (lambda/m * temp) ;
-Yd = Y';
-
-%Set accumulator to calculate the overall cost
-% DELTA = 0;
 % calculate sigmas
 % sigma3 = a3.-Y;
-sigma_3 = a3-Y;
-sigma_2 = (sigma_3*Theta2).*sigmoidGradient([ones(size(z2, 1), 1) z2]);
-sigma_2 = sigma_2(:, 2:end);
+sigma2 = (sigma3*Theta2).*sigmoidGradient([ones(size(z2, 1), 1) z2]);
+sigma2 = sigma2(:, 2:end);
 
 % accumulate gradients
-delta_1 = (sigma_2'*a1);
-delta_2 = (sigma_3'*a2);
-
-% D_ij = 1/m * DELTA;
-% Theta1_grad = 1/m * (DELTA + lambda * Theta1) ;
-% Theta2_grad = 1/m * (DELTA + lambda * Theta2) ;
-
-
-
+delta_1 = (sigma2'*a1);
+delta_2 = (sigma3'*a2);
 
 % calculate regularized gradient
 p1 = (lambda/m)*[zeros(size(Theta1, 1), 1) Theta1(:, 2:end)];
 p2 = (lambda/m)*[zeros(size(Theta2, 1), 1) Theta2(:, 2:end)];
 Theta1_grad = delta_1./m + p1;
 Theta2_grad = delta_2./m + p2;
-
-% gradients by  1/m
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%
-%
-% Part 3: Implement regularization with the cost function and gradients.
-%
-%         Hint: You can implement this around the code for
-%               backpropagation. That is, you can compute the gradients for
-%               the regularization separately and then add them to Theta1_grad
-%               and Theta2_grad from Part 2.
-%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 % -------------------------------------------------------------
 

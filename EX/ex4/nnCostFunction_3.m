@@ -71,29 +71,13 @@ end
 
 
 %First compute the outputs of the 1st layer
-% X = [ones(m, 1) X];
-% z2 = X * Theta1';
-% h1 = sigmoid(X * Theta1');
-% 
-% h1 = [ones(m,1) h1];
-% %Compute output of the 2nd layer
-% h2 = sigmoid(h1 * Theta2');
-% h = h2;
-% a3 = h2;
-% %Find the cost 
-
-
-a1 = [ones(m, 1) X];
-z2 = a1*Theta1';
-a2 = [ones(size(z2, 1), 1) sigmoid(z2)];
-z3 = a2*Theta2';
-a3 = sigmoid(z3);
-h = a3;
-
-
-
-
-
+X = [ones(m, 1) X];
+h1 = sigmoid(X * Theta1');
+h1 = [ones(m,1) h1];
+%Compute output of the 2nd layer
+h2 = sigmoid(h1 * Theta2');
+h = h2;
+%Find the cost 
 
 %Consider that the cost is based on the 10 different classifiers?? I think
 % J = ((1 / m) * (log(h2)' * -y - log(1 - h2)' * (1 - y))) + ((lambda/(2*m)) * sum(Theta2(2:length(Theta2)).^2 ));
@@ -146,34 +130,69 @@ J = sum(sum((-Y).*log(h) - (1-Y).*log(1-h), 2))/m + lambda*p/(2*m);
 Yd = Y';
 
 %Set accumulator to calculate the overall cost
-% DELTA = 0;
-% calculate sigmas
-% sigma3 = a3.-Y;
-sigma_3 = a3-Y;
-sigma_2 = (sigma_3*Theta2).*sigmoidGradient([ones(size(z2, 1), 1) z2]);
-sigma_2 = sigma_2(:, 2:end);
+DELTA = 0;
+for t = 1:m 
+    
+%     Step 1
+    
+%     Set the input layer's values  to the t-th training example . Perform a feedforward pass (Figure 2),
+%     computing the activations  for layers 2 and 3. Note that you need to add a  term to ensure that the vectors of
+%     activations for layers  and  also include the bias unit.
+%     In MATLAB, if a_1 is a column vector, adding one corresponds to a_1 = [1; a_1].
 
-% accumulate gradients
-delta_1 = (sigma_2'*a1);
-delta_2 = (sigma_3'*a2);
+    %Load in first training example
+    a_1 = X(t,:) ; 
+    %Add bias unit - not needed because bias unit already added in part 1
+%     a_1 = [1; a_1];
+    a_2 = sigmoid(a_1 * Theta1')';
+%     a_2 = a_1 * Theta1';
+    a_2 = [1; a_2] ;
+%     a_3 = a_2 * Theta2' ;
+    a_3 = sigmoid(Theta2 * a_2);
+    
+    
+    %Step 2
+    
+%     For each output unit  in layer 3 (the output layer), set delta3 = (a3 - y)  where  indicates whether the current training example belongs to class 
+%     , or if it belongs to a different class .You may find logical arrays helpful for this task (explained in the previous programming exercise).
+%     For the hidden layer , set 
 
-% D_ij = 1/m * DELTA;
-% Theta1_grad = 1/m * (DELTA + lambda * Theta1) ;
-% Theta2_grad = 1/m * (DELTA + lambda * Theta2) ;
+    d_3 = a_3 - Yd(:,t);
+    
+    %Step 3
+%     For the hidden layer l = 2, set delta_2 = theta_2' * delta_3 . *
+%     g(z^2))
+
+    d_2 = (Theta2' * d_3) .*  a_2;
+    
+    %Step 4
+%     Accumulate the gradient from this example using the following
+%     formula: DELTA_L = DELTA_L = delta_(L+1) * (a_L)'
+%     . Note that you should skip or remove delta_0^(2) . In MATLAB, removing  corresponds to delta_2 = delta_2(2:end).
+
+% DELTA = DELTA + (d_3 * a_2');
+% DELTA = DELTA + sum(sum((d_3 * a_2')));
+% DELTA = DELTA + sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1));
+DELTA = DELTA + sum(sum(sum((d_3 * a_2')))' + sum((d_2(2:end) * a_1)));
+% DELTA = sum(DELTA);
+    
+    
+    
+    
+    
+end
+
+% Step 5
+
+
+% Obtain the (unregularized) gradient for the neural network cost function
+% by dividing the accumulated gradients by  1/m
 
 
 
-
-% calculate regularized gradient
-p1 = (lambda/m)*[zeros(size(Theta1, 1), 1) Theta1(:, 2:end)];
-p2 = (lambda/m)*[zeros(size(Theta2, 1), 1) Theta2(:, 2:end)];
-Theta1_grad = delta_1./m + p1;
-Theta2_grad = delta_2./m + p2;
-
-% gradients by  1/m
-
-
-
+D_ij = 1/m * DELTA;
+Theta1_grad = 1/m * (DELTA + lambda * Theta1) ;
+Theta2_grad = 1/m * (DELTA + lambda * Theta2) ;
 
 
 
@@ -222,3 +241,4 @@ grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
 
 end
+    
