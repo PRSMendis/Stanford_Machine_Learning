@@ -32,13 +32,7 @@ p = (sum(theta.^2)-theta(1,1)^2);
 % J = ((1/(2*m)) * (sum(h-y).^2)) + ((lambda/(2*m)) * p) ;
 J = (1/(2*m)) * (sum((h-y).^2)) + ((lambda/(2*m)) * p);
 
-
-%Calculating grad
 grad = 1/m * (X' * (h-y)); 
-thetaT = theta;
-thetaT(1,1) = 0;
-grad = grad + (lambda* thetaT)/m ;
-
 
 
 
