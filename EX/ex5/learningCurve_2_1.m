@@ -80,10 +80,11 @@ V_y = y(i:end);
 error_train = J;
 
 
-error_val = 99999999;
+% error_val = 9999999999999999999;
+error_val = linearRegCostFunction(V_X, V_y, theta, 0);
 for lambda = 1:10
 %     pop = lambda
-    [temp_error_val, grad] = linearRegCostFunction(T_X, T_y, theta, lambda);
+    [temp_error_val, grad] = linearRegCostFunction(V_X, V_y, theta, lambda);
     if temp_error_val <  error_val
         error_val = temp_error_val;
     end
