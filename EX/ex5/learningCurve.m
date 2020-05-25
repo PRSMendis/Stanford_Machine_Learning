@@ -53,46 +53,71 @@ error_val   = zeros(m, 1);
 
 % ---------------------- Sample Solution ----------------------
 x_size = size(X);
-divider = 0.6;
-
-i = floor(x_size(1) * divider);
-
-
-%Calculating 
-train_set = X(1:i, :);
-T_X = train_set;
-train_rslt = y(1:i);
-T_y = train_rslt;
-
-V_X = X(i:end, :);
-V_y = y(i:end);
+% divider = 0.6;
+divider = 0.5;
 
 
-% lambda = 0;
-% [theta] = trainLinearReg([ones(m, 1) X], y, lambda);
+% i = floor(x_size(1) * divider);
+% 
+% 
+% %Calculating 
+% train_set = X(1:i, :);
+% T_X = train_set;
+% train_rslt = y(1:i);
+% T_y = train_rslt;
+% [T_m T_n] = size(T_X);
+% 
+% V_X = X(i:end, :);
+% V_y = y(i:end);
+% [V_m V_n] = size(V_X) ; 
+% 
+% 
+% 
+% % lambda = 0;
+% % [theta] = trainLinearReg([ones(m, 1) X], y, lambda);
+% 
+% 
+% 
+% % Add for loop to see error comparitively to number of training examples
+% [theta] = trainLinearReg(T_X(1:1,:), T_y(1:1), lambda);
+% 
+%     %Acquiring cost of training set
+% [J, grad] = linearRegCostFunction(T_X(1:1,:), T_y(1:1), theta, lambda);
+% error_train(1,0) = J;
+% 
+% for j = 2:T_m
+% 
+%     %Training theta values on training set
+%     [theta] = trainLinearReg(T_X(1:j,:), T_y(1:j), lambda);
+% 
+%     %Acquiring cost of training set
+%     [J, grad] = linearRegCostFunction(T_X(1:j,:), T_y(1:j), theta, lambda);
+% 
+%     error_train(j,1) = J 
+% 
+% end
+% 
+% % error_val = 9999999999999999999;
+% error_val = linearRegCostFunction(V_X, V_y, theta, 0);
+% for lambda = 1:10
+% %     pop = lambda
+%     [temp_error_val, grad] = linearRegCostFunction(V_X, V_y, theta, lambda);
+%     if temp_error_val <  error_val
+%         error_val = temp_error_val;
+%     end
+%     
+%     
+%     
+% end
 
-%Training theta values on training set
-[theta] = trainLinearReg(T_X, T_y, lambda);
 
-%Acquiring cost of training set
-[J, grad] = linearRegCostFunction(T_X, T_y, theta, lambda);
-
-error_train = J;
-
-
-% error_val = 9999999999999999999;
-error_val = linearRegCostFunction(V_X, V_y, theta, 0);
-for lambda = 1:10
-%     pop = lambda
-    [temp_error_val, grad] = linearRegCostFunction(V_X, V_y, theta, lambda);
-    if temp_error_val <  error_val
-        error_val = temp_error_val;
-    end
-    
-    
-    
+for i = 1:m
+  X_train = X(1:i, :);
+  y_train = y(1:i);
+  theta = trainLinearReg(X_train, y_train, lambda);
+  error_train(i)  = linearRegCostFunction(X_train, y_train, theta, 0);  
+  error_val(i)    = linearRegCostFunction(Xval, yval, theta, 0);
 end
-
 
 
 % -------------------------------------------------------------
