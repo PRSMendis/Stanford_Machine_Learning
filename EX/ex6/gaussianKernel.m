@@ -16,7 +16,7 @@ sim = 0;
 %
 %
 numerator = sum((x1-x2).^2);
-sim = exp(-1*(numerator/(2*sigma^2)))
+sim = exp(-1*(numerator/(2*sigma^2)));
 
 
 
